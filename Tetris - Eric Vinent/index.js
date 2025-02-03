@@ -23,17 +23,17 @@ let objpeça = function () {
 
     console.log("Peça creada");
 
-    this.choque = function(angleNou, yNova, xNova){
+    this.choque = function (angleNou, yNova, xNova) {
 
         let resultat = false;
 
-        for(let py=0; py < 4; py++){
+        for (let py = 0; py < 4; py++) {
 
-            for(let px=0; px < 4; px++){
+            for (let px = 0; px < 4; px++) {
 
-                if(grafics[this.tipo][angleNou][py][px]!=0){
+                if (grafics[this.tipo][angleNou][py][px] != 0) {
 
-                    if(taulell[yNova+py][xNova+px]!=0){
+                    if (taulell[yNova + py][xNova + px] != 0) {
 
                         resultat = true;
                     }
@@ -45,9 +45,9 @@ let objpeça = function () {
 
     }
 
-    this.nova = function(){
+    this.nova = function () {
 
-        this.tipo = Math.floor(Math.random()*7)
+        this.tipo = Math.floor(Math.random() * 7)
         this.x = 4
         this.y = 5
 
@@ -106,70 +106,104 @@ let objpeça = function () {
     this.retras = 20
     this.fotograma = 0
 
-    this.caure = function(){
+    this.caure = function () {
 
-        if(this.fotograma < this.retras){
+        if (this.fotograma < this.retras) {
+
             this.fotograma++
 
-        }else{
+        } else {
 
-            if(this.choque(this.angle,this.y+1,this.x)==false){
+            if (this.choque(this.angle, this.y + 1, this.x) == false) {
 
                 this.y++
-                this.fotograma = 0
-            }
-            
-        }
+                this.fotograma = 0;
 
+            } else {
+
+                this.fixarPeça();
+                this.nova();
+
+            }
+        }
+    }
+
+    this.fixarPeça = function () {
+
+        for (let py = 0; py < 4; py++) {
+
+            for (let px = 0; px < 4; px++) {
+
+                if (grafics[this.tipo][this.angle][py][px] > 0) {
+
+                    taulell[this.y + py][this.x + px] = grafics[this.tipo][this.angle][py][px]
+                }
+            }
+        }
     }
 
     this.rotar = function () {
 
         let angleNou = this.angle;
 
-        if(angleNou < 3){
+        if (angleNou < 3) {
 
             angleNou++
-        }else{
+
+        } else {
 
             angleNou = 0
         }
 
-        if(this.choque(angleNou,this.y,this.x)==false){
+        if (this.choque(angleNou, this.y, this.x) == false) {
 
             this.angle = angleNou;
         }
+
+        var snd = new Audio("./Sonidos mp3/escopeta.mp3");
+            snd.play();
 
         console.log("ROTAR");
     }
 
     this.abajo = function () {
 
-        if(this.choque(this.angle,this.y+1,this.x)==false){
+        if (this.choque(this.angle, this.y + 1, this.x) == false) {
 
             this.y++
+
         }
 
+        var snd = new Audio("./Sonidos mp3/camion.mp3");
+            snd.play();
 
         console.log("ABAJO");
     }
 
     this.derecha = function () {
 
-        if(this.choque(this.angle,this.y,this.x+1)==false){
+        if (this.choque(this.angle, this.y, this.x + 1) == false) {
 
             this.x++
+
         }
+
+        var snd = new Audio("./Sonidos mp3/9-mm-gunshot.mp3");
+        snd.play();
 
         console.log("DERECHA");
     }
 
     this.izquierda = function () {
 
-        if(this.choque(this.angle,this.y,this.x-1)==false){
+        if (this.choque(this.angle, this.y, this.x - 1) == false) {
 
             this.x--
+
         }
+        
+        var snd = new Audio("./Sonidos mp3/pistola.mp3");
+            snd.play();
 
         console.log("IZQUIERDA");
     }
