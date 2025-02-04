@@ -8,15 +8,17 @@ let altCanvas = 640
 let ampleF = 40;
 let altF = 40;
 
-let ampleTaulell = 12;
+let ampleTaulell = 10;
 let altTaulell = 20;
 
 let peça
 
+let score = 0;
+
 let objpeça = function () {
 
     this.x = 5;
-    this.y = 5;
+    this.y = 0;
 
     this.tipo = 3;
     this.angle = 1;
@@ -49,7 +51,7 @@ let objpeça = function () {
 
         this.tipo = Math.floor(Math.random() * 7)
         this.x = 4
-        this.y = 5
+        this.y = 0
 
     }
 
@@ -103,6 +105,47 @@ let objpeça = function () {
         }
     }
 
+    this.gameOver = function () {
+
+        let gameOver = false
+        for (px = 1; px <= ampleTaulell; px++) {
+
+            if (taulell[2][px] > 0) {
+
+                gameOver = true
+            }
+        }
+
+        return gameOver;
+    }
+
+    this.fila = function () {
+
+        let filaFeta;
+
+        for (py = 4; py < altTaulell; py++) {
+
+            filaFeta = true;
+            for (px = 1; px <= ampleTaulell; px++) {
+
+                if (taulell[py][px] == 0) {
+
+                    filaFeta = false
+                }
+            }
+
+            if (filaFeta == true) {
+
+                score++
+
+                for (px = 1; px <= ampleTaulell; px++) {
+
+                    taulell[py][px] = 0;
+                }
+            }
+        }
+    }
+
     this.retras = 20
     this.fotograma = 0
 
@@ -122,7 +165,13 @@ let objpeça = function () {
             } else {
 
                 this.fixarPeça();
+                if (this.gameOver()) {
+
+                    recarrega();
+                }
                 this.nova();
+
+
 
             }
         }
@@ -137,6 +186,7 @@ let objpeça = function () {
                 if (grafics[this.tipo][this.angle][py][px] > 0) {
 
                     taulell[this.y + py][this.x + px] = grafics[this.tipo][this.angle][py][px]
+                    
                 }
             }
         }
@@ -161,7 +211,7 @@ let objpeça = function () {
         }
 
         var snd = new Audio("./Sonidos mp3/escopeta.mp3");
-            snd.play();
+        snd.play();
 
         console.log("ROTAR");
     }
@@ -175,7 +225,7 @@ let objpeça = function () {
         }
 
         var snd = new Audio("./Sonidos mp3/camion.mp3");
-            snd.play();
+        snd.play();
 
         console.log("ABAJO");
     }
@@ -201,14 +251,19 @@ let objpeça = function () {
             this.x--
 
         }
-        
+
         var snd = new Audio("./Sonidos mp3/pistola.mp3");
-            snd.play();
+        snd.play();
 
         console.log("IZQUIERDA");
     }
 
     this.nova();
+}
+
+function recarrega() {
+
+    document.location.reload()
 }
 
 let vermell = "#FF0000"
@@ -218,7 +273,7 @@ let verd = "#1AFF00"
 let blau = "#00E6FF"
 let blau_mari = "#006FFF"
 let lila = "#9A00FF"
-let negre = "#FFFFFF"
+let negre = "#000000"
 
 let grafics =
 
@@ -469,9 +524,9 @@ let taulell = [
 
 function dibuixaTaulell() {
 
-    for (let py = 0; py < altTaulell; py++) {
+    for (let py = 0; py <= altTaulell; py++) {
 
-        for (let px = 0; px < ampleTaulell; px++) {
+        for (let px = 0; px <= ampleTaulell; px++) {
 
             ctx.fillStyle = '#FFFFFF';
 
@@ -511,6 +566,7 @@ function principal() {
     dibuixaTaulell()
     peça.dibuixa()
     peça.caure()
+    ctx.fillText("Score", 20, 20);
 }
 
 function borrarPantalla() {
@@ -542,6 +598,6 @@ function inicializarTeclat() {
 
             peça.izquierda();
         }
-    })
-
+    }
+    )
 }
